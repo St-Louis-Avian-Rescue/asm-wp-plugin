@@ -1,0 +1,119 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  phpcs:
+    name: Coding standards (PHPCS)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+          tools: composer
+
+      - name: Install Composer packages
+        run: composer install --no-interaction --no-progress
+
+      - name: Run PHPCS
+        run: vendor/bin/phpcs
+
+  phpunit:
+    name: PHPUnit (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        # The oldest PHP the plugin supports, and the one in the dev containers.
+        php: ['7.4', '8.3']
+    services:
+      db:
+        image: mariadb:11
+        env:
+          MARIADB_ROOT_PASSWORD: root
+          MARIADB_DATABASE: wordpress_test
+          MARIADB_USER: wordpress
+          MARIADB_PASSWORD: wordpress
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+    env:
+      # Read by tests/wp-tests-config.php.
+      WORDPRESS_DB_HOST: 127.0.0.1:3306
+      WP_TESTS_ABSPATH: ${{ github.workspace }}/wordpress/
+    defaults:
+      run:
+        working-directory: wordpress/wp-content/plugins/asm-wp-plugin
+    steps:
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mysqli
+          coverage: none
+          tools: composer, wp-cli
+
+      # The plugin sits inside a WordPress install, as it does in the dev containers.
+      - name: Download WordPress
+        working-directory: ${{ github.workspace }}
+        run: wp core download --path=wordpress
+
+      - uses: actions/checkout@v7
+        with:
+          path: wordpress/wp-content/plugins/asm-wp-plugin
+
+      - name: Install Composer packages
+        run: composer install --no-interaction --no-progress
+
+      - name: Run PHPUnit
+        run: vendor/bin/phpunit
+
+  browser:
+    name: Browser checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Start WordPress and the mock ASM service
+        run: dev/bin/dev up
+
+      - name: Install Playwright
+        working-directory: dev/e2e
+        run: npm install --no-audit --no-fund
+
+      - name: Run the browser checks
+        working-directory: dev/e2e
+        run: CHROMIUM="$(command -v google-chrome || command -v chromium)" node run.mjs
+
+      - name: Show container logs
+        if: failure()
+        run: docker compose -f dev/docker-compose.yml logs --tail=200
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: browser-check-screenshots
+          path: dev/e2e/screenshots/
+          if-no-files-found: ignore
+          retention-days: 7

@@ -1,0 +1,165 @@
+#!/usr/bin/env bash
+# Local development helper for asm-wp-plugin. Run "dev/bin/dev help".
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+export ASM_DEV_UID="${ASM_DEV_UID:-$(id -u)}"
+export ASM_DEV_GID="${ASM_DEV_GID:-$(id -g)}"
+WP_PORT="${ASM_DEV_WP_PORT:-8888}"
+MOCK_PORT="${ASM_DEV_MOCK_PORT:-8889}"
+SITE_URL="http://localhost:${WP_PORT}"
+MOCK_URL="http://localhost:${MOCK_PORT}"
+PLUGIN_DIR=/var/www/html/wp-content/plugins/asm-wp-plugin
+
+compose() { docker compose --progress quiet "$@"; }
+wp() { compose run --rm -T cli wp "$@"; }
+tools() { compose run --rm -T tools "$@"; }
+
+wait_for_wordpress() {
+	printf 'Waiting for WordPress'
+	for _ in $(seq 1 90); do
+		if curl -fsS -o /dev/null "${SITE_URL}/wp-login.php" 2>/dev/null \
+			|| curl -fsS -o /dev/null "${SITE_URL}/wp-admin/install.php" 2>/dev/null; then
+			echo ' ready.'
+			return 0
+		fi
+		printf '.'
+		sleep 2
+	done
+	echo ' timed out.' >&2
+	return 1
+}
+
+page() { # page <slug> <title> <content-or-@file>
+	local slug="$1" title="$2" content="$3" existing
+	existing="$(wp post list --post_type=page --name="$slug" --field=ID --format=ids)"
+	if [ -n "$existing" ]; then
+		wp post delete "$existing" --force >/dev/null
+	fi
+	if [ "${content#@}" != "$content" ]; then
+		wp post create "${PLUGIN_DIR}/dev/${content#@}" --user=admin --post_type=page --post_status=publish \
+			--post_name="$slug" --post_title="$title" --porcelain >/dev/null
+	else
+		wp post create --user=admin --post_type=page --post_status=publish \
+			--post_name="$slug" --post_title="$title" --post_content="$content" --porcelain >/dev/null
+	fi
+	echo "  ${SITE_URL}/${slug}/"
+}
+
+setup() {
+	if ! wp core is-installed 2>/dev/null; then
+		wp core install --url="$SITE_URL" --title='ASM WP Plugin Dev' \
+			--admin_user=admin --admin_password=admin --admin_email=admin@example.org --skip-email
+	fi
+	wp rewrite structure '/%postname%/' >/dev/null
+	wp plugin activate asm-wp-plugin
+
+	# Point the plugin at the mock ASM service.
+	wp option update asm_wp_plugin_settings --format=json --autoload=no "$(cat <<JSON
+{
+	"service_url": "${MOCK_URL}/asmservice",
+	"account": "demo",
+	"username": "demo",
+	"password": "demo",
+	"cache_minutes": 15,
+	"timeout": 10,
+	"card_image": "image",
+	"detail_fields": ["fee", "bonded", "sex", "age"],
+	"currency_symbol": "\$",
+	"currency_position": "before",
+	"apply_url": "${SITE_URL}/adoption-application/?animal={code}",
+	"apply_label": "",
+	"share_text": "",
+	"filters": 0
+}
+JSON
+)" >/dev/null
+	wp eval 'ASM_WP_Plugin_Client::clear( true ); $d = ASM_WP_Plugin_Client::refresh(); echo count( $d["animals"] ) . " animals fetched from the mock ASM service\n";'
+
+	echo 'Pages:'
+	page adopt 'Adopt' '<!-- wp:group {"align":"wide"} --><div class="wp-block-group alignwide"><!-- wp:shortcode -->[asm_adoptable]<!-- /wp:shortcode --></div><!-- /wp:group -->'
+	page adopt-filters 'Adopt (with filters)' '<!-- wp:group {"align":"wide"} --><div class="wp-block-group alignwide"><!-- wp:shortcode -->[asm_adoptable filters="yes"]<!-- /wp:shortcode --></div><!-- /wp:group -->'
+	page adopt-block 'Adopt (block)' '<!-- wp:asm-wp-plugin/adoptable {"species":"Dog,Cat","sort":"newest","columns":4,"filters":"all"} /-->'
+	page adoption-application 'Adoption application' '<!-- wp:paragraph --><p>Stand-in for an application form.</p><!-- /wp:paragraph -->'
+	echo "Admin: ${SITE_URL}/wp-admin/  (admin / admin)"
+}
+
+mock() { curl -fsS "${MOCK_URL}/control?$1"; echo; }
+
+case "${1:-help}" in
+	up)
+		compose up -d --build db wordpress asm-mock
+		compose build -q cli
+		wait_for_wordpress
+		setup
+		;;
+	setup) setup ;;
+	down) compose --profile tools down ;;
+	destroy) compose --profile tools down --volumes ;;
+	wp) shift; wp "$@" ;;
+	refresh) wp eval 'ASM_WP_Plugin_Client::clear(); $d = ASM_WP_Plugin_Client::refresh(); echo count( $d["animals"] ) . " animals, " . ( $d["stale"] ? "STALE: " . $d["error"] : "fresh" ) . "\n";' ;;
+	expire) wp eval 'ASM_WP_Plugin_Client::clear(); echo "The cached animals will be re-fetched on the next request.\n";' ;;
+	asm)
+		case "${2:-}" in
+			down) mock 'down=1' ;;
+			up) mock 'down=0' ;;
+			hide) mock "hide=${3:?animal ID}" ;;
+			reset) mock 'reset=1' ;;
+			*) echo 'Usage: dev asm down|up|hide <id>|reset' >&2; exit 1 ;;
+		esac
+		;;
+	theme)
+		case "${2:-}" in
+			demo) wp theme activate asm-wp-plugin-demo ;;
+			default) wp theme activate "$(wp theme list --field=name | grep -m1 '^twentytwenty')" ;;
+			*) wp theme activate "${2:?theme slug, or demo, or default}" ;;
+		esac
+		;;
+	composer) shift; tools composer "$@" ;;
+	test)
+		shift
+		[ -d ../vendor ] || tools composer install --no-interaction --no-progress
+		tools vendor/bin/phpunit "$@"
+		;;
+	lint)
+		shift
+		[ -d ../vendor ] || tools composer install --no-interaction --no-progress
+		tools vendor/bin/phpcs "$@"
+		;;
+	lint-fix)
+		shift
+		tools vendor/bin/phpcbf "$@" || true
+		;;
+	pot) tools wp i18n make-pot . languages/asm-wp-plugin.pot --exclude=dev,vendor,tests,node_modules ;;
+	zip)
+		# Built from the last commit, so commit first. Dev-only files are left out (.gitattributes).
+		git -C .. archive --format=zip --prefix=asm-wp-plugin/ -o asm-wp-plugin.zip HEAD
+		echo "Built $(cd .. && pwd)/asm-wp-plugin.zip from $(git -C .. rev-parse --short HEAD)"
+		;;
+	logs) compose logs -f wordpress ;;
+	*)
+		cat <<HELP
+Usage: dev/bin/dev <command>
+
+  up                 Start WordPress (${SITE_URL}) and the mock ASM service, and set everything up
+  setup              Re-run the setup (settings and demo pages) on a running site
+  down               Stop the containers, keeping the data
+  destroy            Stop the containers and delete the data
+  wp <args>          Run wp-cli
+  refresh            Fetch from the mock ASM service now
+  expire             Mark the cached animals as out of date
+  asm down|up        Make the mock ASM service fail, or work again
+  asm hide <id>      Drop an animal from the mock feed, as if adopted
+  asm reset          Undo "down" and "hide"
+  theme demo|default|<slug>
+                     Switch theme
+  test [args]        Run PHPUnit
+  lint [args]        Run PHPCS
+  lint-fix           Fix what PHPCBF can
+  pot                Regenerate languages/asm-wp-plugin.pot
+  zip                Build asm-wp-plugin.zip from the last commit
+  logs               Follow the WordPress log
+HELP
+		;;
+esac

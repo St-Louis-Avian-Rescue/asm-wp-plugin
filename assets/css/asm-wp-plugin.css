@@ -1,0 +1,545 @@
+/**
+ * ASM WP Plugin: adoptable animals listing.
+ *
+ * Fonts and text colours come from your theme. Everything else can be
+ * changed by setting these custom properties on .asm-wp-plugin (or :root) in
+ * your theme's stylesheet or Additional CSS:
+ *
+ *   .asm-wp-plugin {
+ *     --asm-wp-plugin-accent: #0a6e5c;
+ *     --asm-wp-plugin-card-min: 14rem;
+ *   }
+ */
+
+.asm-wp-plugin {
+	/* Grid */
+	--asm-wp-plugin-card-min: 10.5rem;
+	--asm-wp-plugin-gap: 1.5rem;
+	--asm-wp-plugin-image-ratio: 6 / 7;
+	--asm-wp-plugin-radius: 0.2rem;
+	--asm-wp-plugin-hover-scale: 1.1;
+
+	/* Colours. "inherit" follows the theme. */
+	--asm-wp-plugin-text: inherit;
+	--asm-wp-plugin-muted-opacity: 0.75;
+	--asm-wp-plugin-accent: #525252;
+	--asm-wp-plugin-accent-text: #fff;
+	--asm-wp-plugin-special: #d40e0e;
+	--asm-wp-plugin-image-bg: rgba(128, 128, 128, 0.15);
+
+	/* Details dialog. Uses the theme's base and contrast colours when it has them. */
+	--asm-wp-plugin-overlay: rgba(0, 0, 0, 0.4);
+	--asm-wp-plugin-modal-bg: var(--wp--preset--color--base, #fff);
+	--asm-wp-plugin-modal-text: var(--wp--preset--color--contrast, #403d3d);
+	--asm-wp-plugin-modal-border: #888;
+	--asm-wp-plugin-modal-width: 40rem;
+	--asm-wp-plugin-modal-font-size: 1rem;
+	--asm-wp-plugin-slide-height: 20rem;
+	--asm-wp-plugin-share-bg: #8a8a8a;
+	--asm-wp-plugin-share-text: #fff;
+
+	/* Filter bar */
+	--asm-wp-plugin-field-border: rgba(128, 128, 128, 0.6);
+	--asm-wp-plugin-field-bg: transparent;
+
+	color: var(--asm-wp-plugin-text);
+}
+
+.asm-wp-plugin *,
+.asm-wp-plugin *::before,
+.asm-wp-plugin *::after {
+	box-sizing: border-box;
+}
+
+.asm-wp-plugin [hidden] {
+	display: none !important;
+}
+
+/* Grid ------------------------------------------------------------------ */
+
+.asm-wp-plugin .asm-wp-plugin-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(var(--asm-wp-plugin-card-min), 1fr));
+	gap: var(--asm-wp-plugin-gap);
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.asm-wp-plugin--columns .asm-wp-plugin-grid {
+	grid-template-columns: repeat(var(--asm-wp-plugin-columns, 4), minmax(0, 1fr));
+}
+
+@media (max-width: 600px) {
+	.asm-wp-plugin .asm-wp-plugin-grid,
+	.asm-wp-plugin--columns .asm-wp-plugin-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: calc(var(--asm-wp-plugin-gap) / 2);
+	}
+}
+
+.asm-wp-plugin .asm-wp-plugin-card {
+	list-style: none;
+	margin: 0;
+	padding: 0.5rem;
+	border-radius: var(--asm-wp-plugin-radius);
+	transition: transform 0.15s ease;
+}
+
+.asm-wp-plugin .asm-wp-plugin-card:hover {
+	transform: scale(var(--asm-wp-plugin-hover-scale));
+}
+
+/*
+ * Closing the dialog puts focus back on the card that opened it. Growing on
+ * any focus would leave that card enlarged, so only keyboard focus counts.
+ * Kept apart from the hover rule: a browser without :has() drops this one.
+ */
+.asm-wp-plugin .asm-wp-plugin-card:has(.asm-wp-plugin-card__link:focus-visible) {
+	transform: scale(var(--asm-wp-plugin-hover-scale));
+}
+
+.asm-wp-plugin .asm-wp-plugin-card__link {
+	display: block;
+	text-align: center;
+}
+
+/*
+ * Cards are list items, and many themes style every link inside a list item
+ * or paragraph, sometimes with !important. A card is not a text link.
+ */
+.asm-wp-plugin .asm-wp-plugin-card__link,
+.asm-wp-plugin .asm-wp-plugin-card__link:hover,
+.asm-wp-plugin .asm-wp-plugin-card__link:focus {
+	color: inherit !important;
+	text-decoration: none !important;
+}
+
+.asm-wp-plugin .asm-wp-plugin-card__link:focus-visible {
+	outline: 2px solid currentColor;
+	outline-offset: 4px;
+}
+
+.asm-wp-plugin .asm-wp-plugin-card__image {
+	display: block;
+	aspect-ratio: var(--asm-wp-plugin-image-ratio);
+	overflow: hidden;
+	background: var(--asm-wp-plugin-image-bg);
+	border-radius: var(--asm-wp-plugin-radius);
+}
+
+.asm-wp-plugin .asm-wp-plugin-card__image img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	max-width: none;
+	object-fit: cover;
+}
+
+.asm-wp-plugin .asm-wp-plugin-card__name {
+	display: block;
+	padding-top: 0.5rem;
+	font-size: 1rem;
+	font-weight: 700;
+	line-height: 1.3;
+}
+
+.asm-wp-plugin .asm-wp-plugin-card__details {
+	display: block;
+	font-size: 0.8125rem;
+	font-weight: 400;
+	line-height: 1.3;
+	opacity: var(--asm-wp-plugin-muted-opacity);
+}
+
+.asm-wp-plugin .asm-wp-plugin-message {
+	margin: 1.5rem 0;
+}
+
+.asm-wp-plugin .asm-wp-plugin-credit {
+	margin: 2rem 0 0;
+	font-size: 0.8rem;
+	text-align: right;
+	opacity: var(--asm-wp-plugin-muted-opacity);
+}
+
+.asm-wp-plugin .asm-wp-plugin-admin-note {
+	padding: 0.75rem 1rem;
+	border-left: 4px solid #dba617;
+	background: rgba(219, 166, 23, 0.12);
+	font-size: 0.875rem;
+}
+
+/* Filter bar ------------------------------------------------------------ */
+
+.asm-wp-plugin .asm-wp-plugin-filters {
+	display: none;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	gap: 0.75rem 1rem;
+	margin: 0 0 1.5rem;
+}
+
+/* The bar needs the page script, so it only appears once that is running. */
+.asm-wp-plugin--js .asm-wp-plugin-filters {
+	display: flex;
+}
+
+.asm-wp-plugin .asm-wp-plugin-filters__field {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	margin: 0;
+	font-size: 0.875rem;
+}
+
+.asm-wp-plugin .asm-wp-plugin-filters__field--search {
+	flex: 1 1 14em;
+	max-width: 22em;
+}
+
+.asm-wp-plugin .asm-wp-plugin-filters__field--check {
+	flex-direction: row;
+	align-items: center;
+	gap: 0.4rem;
+	min-height: 2.5em;
+}
+
+.asm-wp-plugin .asm-wp-plugin-filters__label {
+	font-weight: 600;
+}
+
+.asm-wp-plugin .asm-wp-plugin-filters input[type="search"],
+.asm-wp-plugin .asm-wp-plugin-filters select {
+	width: 100%;
+	min-height: 2.5em;
+	margin: 0;
+	padding: 0.35em 0.6em;
+	border: 1px solid var(--asm-wp-plugin-field-border);
+	border-radius: var(--asm-wp-plugin-radius);
+	background-color: var(--asm-wp-plugin-field-bg);
+	color: inherit;
+	font: inherit;
+	font-size: 1rem;
+}
+
+.asm-wp-plugin .asm-wp-plugin-filters select option {
+	color: initial;
+}
+
+.asm-wp-plugin .asm-wp-plugin-filters__clear {
+	min-height: 2.5em;
+	padding: 0.35em 1em;
+	border: 1px solid var(--asm-wp-plugin-field-border);
+	border-radius: var(--asm-wp-plugin-radius);
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	font-size: 0.875rem;
+	cursor: pointer;
+}
+
+.asm-wp-plugin .asm-wp-plugin-filters__count {
+	flex-basis: 100%;
+	margin: 0;
+	font-size: 0.875rem;
+	opacity: var(--asm-wp-plugin-muted-opacity);
+}
+
+/* Details dialog -------------------------------------------------------- */
+
+.asm-wp-plugin .asm-wp-plugin-modal {
+	position: fixed;
+	z-index: 100000;
+	inset: 0;
+	overflow: auto;
+	overscroll-behavior: contain;
+	background-color: var(--asm-wp-plugin-overlay);
+}
+
+.asm-wp-plugin .asm-wp-plugin-modal__content {
+	width: var(--asm-wp-plugin-modal-width);
+	max-width: 90%;
+	margin: 8vh auto;
+	padding: 20px;
+	border: 1px solid var(--asm-wp-plugin-modal-border);
+	background-color: var(--asm-wp-plugin-modal-bg);
+	color: var(--asm-wp-plugin-modal-text);
+	font-size: var(--asm-wp-plugin-modal-font-size);
+}
+
+.asm-wp-plugin .asm-wp-plugin-modal__header {
+	display: flex;
+	justify-content: flex-end;
+	margin-bottom: 0.5em;
+}
+
+.asm-wp-plugin .asm-wp-plugin-modal__close {
+	color: inherit;
+	font-size: 2em;
+	font-weight: 700;
+	line-height: 1;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.asm-wp-plugin .asm-wp-plugin-modal__close:hover {
+	color: #d40e0e;
+}
+
+/* Focus is moved here when the dialog opens; only show a ring for keyboard users. */
+.asm-wp-plugin .asm-wp-plugin-modal__close:focus:not(:focus-visible) {
+	outline: none;
+}
+
+.asm-wp-plugin .asm-wp-plugin-modal__status {
+	margin: 3em 0;
+	text-align: center;
+}
+
+/* Photo carousel */
+
+.asm-wp-plugin .asm-wp-plugin-slides {
+	position: relative;
+	margin: auto;
+}
+
+.asm-wp-plugin .asm-wp-plugin-slide {
+	display: none;
+}
+
+.asm-wp-plugin .asm-wp-plugin-slide.is-active {
+	display: block;
+	animation: asm-wp-plugin-fade 0.8s;
+}
+
+.asm-wp-plugin .asm-wp-plugin-slide img {
+	display: block;
+	width: 100%;
+	height: var(--asm-wp-plugin-slide-height);
+	object-fit: contain;
+}
+
+@keyframes asm-wp-plugin-fade {
+	from {
+		opacity: 0.4;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.asm-wp-plugin .asm-wp-plugin-slide.is-active {
+		animation: none;
+	}
+
+	.asm-wp-plugin .asm-wp-plugin-card {
+		transition: none;
+	}
+}
+
+.asm-wp-plugin .asm-wp-plugin-slides__nav {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	padding: 16px;
+	border: 0;
+	border-radius: 0 3px 3px 0;
+	background: transparent;
+	color: inherit;
+	-webkit-text-stroke: 1px var(--asm-wp-plugin-modal-bg);
+	font-size: 2.5em;
+	font-weight: 700;
+	line-height: 1;
+	cursor: pointer;
+	user-select: none;
+	transition: background-color 0.3s ease;
+}
+
+.asm-wp-plugin .asm-wp-plugin-slides__nav--prev {
+	left: 0;
+}
+
+.asm-wp-plugin .asm-wp-plugin-slides__nav--next {
+	right: 0;
+	border-radius: 3px 0 0 3px;
+}
+
+.asm-wp-plugin .asm-wp-plugin-slides__nav:hover,
+.asm-wp-plugin .asm-wp-plugin-slides__nav:focus-visible {
+	background-color: rgba(0, 0, 0, 0.8);
+	color: #fff;
+	-webkit-text-stroke: 0;
+}
+
+/* Text */
+
+.asm-wp-plugin .asm-wp-plugin-detail__header,
+.asm-wp-plugin .asm-wp-plugin-detail__special,
+.asm-wp-plugin .asm-wp-plugin-detail__facts,
+.asm-wp-plugin .asm-wp-plugin-detail__description,
+.asm-wp-plugin .asm-wp-plugin-detail__apply {
+	margin-right: 10%;
+	margin-left: 10%;
+	text-align: left;
+}
+
+.asm-wp-plugin .asm-wp-plugin-detail__header {
+	padding-top: 4%;
+	line-height: 1.2;
+}
+
+.asm-wp-plugin .asm-wp-plugin-detail__name {
+	margin: 0;
+	padding: 0;
+	color: inherit;
+	font-size: 1.5rem;
+	font-weight: 700;
+	line-height: 1.2;
+}
+
+/* "color: inherit" keeps the dialog's text colour where a theme colours every paragraph. */
+.asm-wp-plugin .asm-wp-plugin-detail__label {
+	margin: 0;
+	color: inherit;
+	font-size: 1.2rem;
+	font-weight: 700;
+	line-height: 1.2;
+	opacity: var(--asm-wp-plugin-muted-opacity);
+}
+
+.asm-wp-plugin .asm-wp-plugin-detail__special {
+	margin-top: 0.3rem;
+	margin-bottom: 0;
+	color: var(--asm-wp-plugin-special);
+	font-size: 0.8rem;
+	font-weight: 700;
+}
+
+.asm-wp-plugin .asm-wp-plugin-detail__facts {
+	margin-top: 5%;
+	margin-bottom: 5%;
+	font-weight: 500;
+}
+
+.asm-wp-plugin .asm-wp-plugin-detail__facts p {
+	margin: 0;
+	line-height: 1.4;
+}
+
+/* A name within a line of text, not a text link: see the note on card links. */
+.asm-wp-plugin .asm-wp-plugin-detail__companion {
+	color: inherit !important;
+	font-weight: 700;
+	text-decoration: none !important;
+}
+
+.asm-wp-plugin .asm-wp-plugin-detail__companion:hover,
+.asm-wp-plugin .asm-wp-plugin-detail__companion:focus-visible {
+	text-decoration: underline !important;
+}
+
+.asm-wp-plugin .asm-wp-plugin-detail__description {
+	font-weight: 500;
+	line-height: 1.4;
+}
+
+/* Themes often set a line height on every paragraph; keep the one above. */
+.asm-wp-plugin .asm-wp-plugin-detail__description p {
+	margin: 0 0 0.8em;
+	line-height: inherit;
+}
+
+.asm-wp-plugin .asm-wp-plugin-detail__apply {
+	margin-top: 5%;
+	margin-bottom: 0;
+	background-color: var(--asm-wp-plugin-accent);
+	text-align: center;
+}
+
+.asm-wp-plugin .asm-wp-plugin-detail__apply a {
+	display: block;
+	padding: 0.4em 1em;
+	color: var(--asm-wp-plugin-accent-text);
+	text-decoration: none;
+}
+
+.asm-wp-plugin .asm-wp-plugin-detail__apply a:hover,
+.asm-wp-plugin .asm-wp-plugin-detail__apply a:focus {
+	text-decoration: underline;
+}
+
+/* Share row */
+
+.asm-wp-plugin .asm-wp-plugin-share {
+	display: flex;
+	justify-content: center;
+	gap: 1rem;
+	padding-top: 1rem;
+}
+
+.asm-wp-plugin .asm-wp-plugin-share__link {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.75rem;
+	height: 2.75rem;
+	border-radius: 50%;
+	background-color: var(--asm-wp-plugin-share-bg);
+	color: var(--asm-wp-plugin-share-text);
+	text-decoration: none;
+}
+
+.asm-wp-plugin .asm-wp-plugin-share__link:hover,
+.asm-wp-plugin .asm-wp-plugin-share__link:focus-visible {
+	background-color: var(--asm-wp-plugin-accent);
+	color: var(--asm-wp-plugin-accent-text);
+}
+
+.asm-wp-plugin .asm-wp-plugin-icon {
+	width: 1.5rem;
+	height: 1.5rem;
+}
+
+.asm-wp-plugin .asm-wp-plugin-share__tooltip {
+	position: absolute;
+	bottom: 125%;
+	left: 50%;
+	width: 120px;
+	margin-left: -60px;
+	padding: 5px 0;
+	background-color: #3e3d3d;
+	color: #fff;
+	font-size: 0.875rem;
+	text-align: center;
+}
+
+.asm-wp-plugin .asm-wp-plugin-share__tooltip:empty {
+	display: none;
+}
+
+.asm-wp-plugin .asm-wp-plugin-share__tooltip::after {
+	content: "";
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	margin-left: -5px;
+	border: 5px solid transparent;
+	border-top-color: #3e3d3d;
+}
+
+.asm-wp-plugin .asm-wp-plugin-share__caption {
+	margin: 0;
+	padding-top: 0.2rem;
+	font-size: 1.3rem;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+/* Stops the page behind the dialog from scrolling. */
+html.asm-wp-plugin-modal-open {
+	overflow: hidden;
+}

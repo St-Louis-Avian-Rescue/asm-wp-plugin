@@ -1,0 +1,12 @@
+# Left out of the zip built by `dev/bin/dev zip` (git archive). Keep in step with .distignore.
+/.github export-ignore
+/.wordpress-org export-ignore
+/dev export-ignore
+/tests export-ignore
+.distignore export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore
+composer.json export-ignore
+phpcs.xml.dist export-ignore
+phpunit.xml.dist export-ignore
+README.md export-ignore

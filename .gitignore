@@ -1,0 +1,31 @@
+# Dependencies and build output
+/vendor/
+/node_modules/
+/composer.lock
+*.zip
+
+# Test and tool caches
+.phpunit.result.cache
+.phpcs-cache
+
+# Local overrides of the checked-in config
+/phpcs.xml
+/phpunit.xml
+docker-compose.override.yml
+
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# Editors and operating systems
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~

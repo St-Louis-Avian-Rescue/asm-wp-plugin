@@ -1,0 +1,16 @@
+# Left out of the plugin zip and the wordpress.org release.
+/.git
+/.github
+/.wordpress-org
+/dev
+/tests
+/vendor
+/node_modules
+.distignore
+.gitignore
+composer.json
+composer.lock
+phpcs.xml.dist
+phpunit.xml.dist
+.phpunit.result.cache
+README.md

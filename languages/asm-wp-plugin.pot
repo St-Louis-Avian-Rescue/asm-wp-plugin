@@ -1,0 +1,628 @@
+# Copyright (C) 2026 Jacob Sabella
+# This file is distributed under the MIT.
+msgid ""
+msgstr ""
+"Project-Id-Version: ASM WP Plugin – Adoptable Animals from Animal Shelter Manager 1.0.1\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/asm-wp-plugin\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-11-21T04:21:53+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: asm-wp-plugin\n"
+
+#. Plugin Name of the plugin
+#: asm-wp-plugin.php
+msgid "ASM WP Plugin – Adoptable Animals from Animal Shelter Manager"
+msgstr ""
+
+#. Description of the plugin
+#: asm-wp-plugin.php
+msgid "Shows the adoptable animals from your Animal Shelter Manager (ASM / sheltermanager.com) account on your site, with photos, details, sharing and optional search and filters."
+msgstr ""
+
+#. Author of the plugin
+#: asm-wp-plugin.php
+msgid "Jacob Sabella"
+msgstr ""
+
+#. Author URI of the plugin
+#: asm-wp-plugin.php
+msgid "https://jacobsabella.com"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:32
+#: includes/class-asm-wp-plugin-admin.php:33
+#: includes/class-asm-wp-plugin-admin.php:239
+msgid "ASM WP Plugin"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:47
+msgid "Settings"
+msgstr ""
+
+#. translators: %s: reason the connection failed.
+#: includes/class-asm-wp-plugin-admin.php:73
+#, php-format
+msgid "Could not get animals from ASM: %s"
+msgstr ""
+
+#. translators: %s: number of animals.
+#: includes/class-asm-wp-plugin-admin.php:81
+#, php-format
+msgid "Connected. ASM returned %s adoptable animal."
+msgid_plural "Connected. ASM returned %s adoptable animals."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: reason the fetch failed.
+#: includes/class-asm-wp-plugin-admin.php:100
+#, php-format
+msgid "The cache was cleared, but fetching fresh animals failed: %s"
+msgstr ""
+
+#. translators: %s: number of animals.
+#: includes/class-asm-wp-plugin-admin.php:108
+#, php-format
+msgid "Cache cleared. %s animal fetched from ASM."
+msgid_plural "Cache cleared. %s animals fetched from ASM."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-asm-wp-plugin-admin.php:121
+msgid "You are not allowed to do that."
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:195
+#: includes/class-asm-wp-plugin-admin.php:330
+msgid "(hidden)"
+msgstr ""
+
+#. translators: %s: name of a PHP constant.
+#: includes/class-asm-wp-plugin-admin.php:200
+#: includes/class-asm-wp-plugin-admin.php:335
+#, php-format
+msgid "Set by %s in wp-config.php."
+msgstr ""
+
+#. translators: %s: the shortcode.
+#: includes/class-asm-wp-plugin-admin.php:246
+#, php-format
+msgid "Show your adoptable animals on any page with the “Adoptable animals” block or the %s shortcode."
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:252
+msgid "Status"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:256
+msgid "Last successful fetch"
+msgstr ""
+
+#. translators: 1: how long ago, 2: number of animals.
+#: includes/class-asm-wp-plugin-admin.php:262
+#, php-format
+msgid "%1$s ago, %2$s animals"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:267
+msgid "Never"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:273
+msgid "Latest problem"
+msgstr ""
+
+#. translators: 1: how long ago, 2: error message.
+#: includes/class-asm-wp-plugin-admin.php:279
+#, php-format
+msgid "%1$s ago: %2$s"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:284
+msgid "Visitors are seeing the last good copy."
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:287
+msgid "None"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:296
+msgid "Test connection"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:297
+msgid "Clear cache"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:298
+msgid "Both use the saved settings, so save any changes first."
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:305
+msgid "Connection"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:306
+msgid "Use an ASM user made just for this, with permission to view animals and nothing else."
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:311
+msgid "Service URL"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:315
+msgid "For sheltermanager.com leave this as it is. For your own ASM server it is the address of its <code>/service</code> page."
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:320
+msgid "Account"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:322
+msgid "Your sheltermanager.com account number, such as <code>ab1234</code>. Leave empty for your own ASM server."
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:324
+msgid "Username"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:327
+msgid "Password"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:343
+msgid "A password is saved. Leave this empty to keep it."
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:344
+msgid "Remove the saved password"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:346
+msgid "No password is saved yet."
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:354
+msgid "Refresh every (minutes)"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:359
+msgid "How long to keep the animals before asking ASM again."
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:368
+msgid "Give up after (seconds)"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:373
+msgid "If ASM has not answered by then, the last good copy is shown."
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:383
+msgid "Display"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:386
+#: block/editor.js:81
+msgid "Search and filter bar"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:388
+msgid "Show search, filters and sorting above the animals"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:389
+msgid "A single listing can override this: <code>[asm_adoptable filters=\"yes\"]</code> or <code>filters=\"no\"</code>."
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:393
+msgid "Photo on each card"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:396
+msgid "Full photo (sharper)"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:397
+msgid "ASM thumbnail (faster)"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:402
+#: includes/class-asm-wp-plugin-admin.php:405
+msgid "Details to show"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:410
+msgid "Untick “Adoption fee” to hide fees, for example if you write them in the description."
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:414
+msgid "Currency"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:417
+msgid "Currency symbol position"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:418
+msgid "before the amount"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:419
+msgid "after the amount"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:426
+msgid "Application link"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:430
+msgid "Where the apply button goes. <code>{code}</code>, <code>{id}</code> and <code>{name}</code> are replaced with the animal’s shelter code, ASM ID and name, for example <code>https://example.org/apply/?animal={code}</code>. Leave empty for no button."
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:435
+msgid "Application button text"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:439
+#: includes/class-asm-wp-plugin-animals.php:397
+msgid "Click here to fill out an adoption application."
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:444
+msgid "Share message"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:448
+msgid "Text sent with shares. <code>{name}</code> is replaced with the animal’s name."
+msgstr ""
+
+#. translators: {name} is replaced with the animal's name. Keep it as is.
+#: includes/class-asm-wp-plugin-admin.php:449
+#: includes/class-asm-wp-plugin-animals.php:381
+msgid "{name} is looking for a new family"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:454
+msgid "Credit"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-admin.php:456
+msgid "Show a small \"Built with ASM WP Plugin\" link under the animals"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-animals.php:165
+msgid "Less than a year old"
+msgstr ""
+
+#. translators: %s: age in years.
+#: includes/class-asm-wp-plugin-animals.php:169
+#, php-format
+msgid "%s year"
+msgid_plural "%s years"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: animal name.
+#: includes/class-asm-wp-plugin-animals.php:403
+#, php-format
+msgid "Adopt - %s"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-client.php:104
+msgid "The ASM service URL, username and password have not all been set."
+msgstr ""
+
+#. translators: %d: HTTP status code.
+#: includes/class-asm-wp-plugin-client.php:149
+#, php-format
+msgid "ASM answered with HTTP status %d. Check the account, username and password."
+msgstr ""
+
+#: includes/class-asm-wp-plugin-client.php:155
+msgid "ASM did not send back a list of animals. Check the account, username and password."
+msgstr ""
+
+#: includes/class-asm-wp-plugin-renderer.php:59
+msgid "Loading…"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-renderer.php:60
+msgid "Sorry, the details could not be loaded. Please try again."
+msgstr ""
+
+#: includes/class-asm-wp-plugin-renderer.php:61
+msgid "This animal is no longer listed. They may have found a home!"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-renderer.php:62
+msgid "Copied!"
+msgstr ""
+
+#. translators: %d: number of animals shown.
+#: includes/class-asm-wp-plugin-renderer.php:64
+#, php-format
+msgid "%d animal"
+msgstr ""
+
+#. translators: %d: number of animals shown.
+#: includes/class-asm-wp-plugin-renderer.php:66
+#, php-format
+msgid "%d animals"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-renderer.php:313
+msgid "Our list of adoptable animals is not available right now. Please check back soon."
+msgstr ""
+
+#. translators: 1: reason the animals could not be loaded, 2: settings page URL.
+#: includes/class-asm-wp-plugin-renderer.php:319
+#, php-format
+msgid "Only administrators see this: %1$s <a href=\"%2$s\">Open the ASM WP Plugin settings</a>."
+msgstr ""
+
+#: includes/class-asm-wp-plugin-renderer.php:320
+msgid "No animals have been fetched yet."
+msgstr ""
+
+#: includes/class-asm-wp-plugin-rest.php:166
+msgid "This animal is no longer listed."
+msgstr ""
+
+#: includes/class-asm-wp-plugin-settings.php:94
+msgid "Adoption fee"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-settings.php:95
+msgid "Bonded companion"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-settings.php:96
+#: templates/filters.php:23
+msgid "Sex"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-settings.php:97
+msgid "Age"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-settings.php:98
+#: templates/filters.php:24
+msgid "Size"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-settings.php:99
+msgid "Arrival date"
+msgstr ""
+
+#: includes/class-asm-wp-plugin-settings.php:100
+msgid "Shelter code"
+msgstr ""
+
+#. translators: 1: animal name, 2: photo number, 3: number of photos.
+#: templates/detail.php:28
+#, php-format
+msgid "%1$s, photo %2$d of %3$d"
+msgstr ""
+
+#: templates/detail.php:36
+msgid "Previous photo"
+msgstr ""
+
+#: templates/detail.php:37
+msgid "Next photo"
+msgstr ""
+
+#: templates/detail.php:48
+msgid "Has special needs"
+msgstr ""
+
+#: templates/detail.php:57
+msgid "Adoption fee (together):"
+msgstr ""
+
+#: templates/detail.php:58
+msgid "Adoption fee:"
+msgstr ""
+
+#: templates/detail.php:67
+msgid "Bonded with:"
+msgstr ""
+
+#: templates/detail.php:76
+msgid "Sex:"
+msgstr ""
+
+#: templates/detail.php:81
+msgid "Age (estimated):"
+msgstr ""
+
+#: templates/detail.php:81
+msgid "Age:"
+msgstr ""
+
+#: templates/detail.php:87
+msgid "Size:"
+msgstr ""
+
+#: templates/detail.php:91
+msgid "With us since:"
+msgstr ""
+
+#: templates/detail.php:95
+msgid "Shelter code:"
+msgstr ""
+
+#: templates/detail.php:112
+msgid "Share on Facebook"
+msgstr ""
+
+#: templates/detail.php:115
+msgid "Share on X"
+msgstr ""
+
+#: templates/detail.php:118
+msgid "Share by email"
+msgstr ""
+
+#: templates/detail.php:121
+msgid "Copy link"
+msgstr ""
+
+#: templates/detail.php:126
+msgid "Share me!"
+msgstr ""
+
+#: templates/filters.php:22
+#: block/editor.js:38
+msgid "Species"
+msgstr ""
+
+#: templates/filters.php:22
+msgid "All species"
+msgstr ""
+
+#: templates/filters.php:23
+msgid "Any sex"
+msgstr ""
+
+#: templates/filters.php:24
+msgid "Any size"
+msgstr ""
+
+#: templates/filters.php:27
+#: block/editor.js:49
+msgid "Name"
+msgstr ""
+
+#: templates/filters.php:28
+#: block/editor.js:50
+msgid "Newest arrivals"
+msgstr ""
+
+#: templates/filters.php:29
+#: block/editor.js:51
+msgid "Youngest first"
+msgstr ""
+
+#: templates/filters.php:30
+#: block/editor.js:52
+msgid "Oldest first"
+msgstr ""
+
+#: templates/filters.php:33
+msgid "Search and filter animals"
+msgstr ""
+
+#: templates/filters.php:37
+msgid "Search"
+msgstr ""
+
+#: templates/filters.php:38
+msgid "Name or breed"
+msgstr ""
+
+#: templates/filters.php:58
+msgid "Sort by"
+msgstr ""
+
+#: templates/filters.php:70
+msgid "Special needs only"
+msgstr ""
+
+#: templates/filters.php:74
+msgid "Clear"
+msgstr ""
+
+#: templates/grid.php:53
+msgid "There are no animals available for adoption right now. Please check back soon."
+msgstr ""
+
+#: templates/grid.php:56
+msgid "No animals match your search."
+msgstr ""
+
+#. translators: %s: the plugin's name, as a link.
+#: templates/grid.php:64
+#, php-format
+msgid "Built with %s"
+msgstr ""
+
+#: templates/modal.php:23
+msgid "Animal details"
+msgstr ""
+
+#: templates/modal.php:28
+msgid "Close"
+msgstr ""
+
+#: block/editor.js:36
+msgid "Listing"
+msgstr ""
+
+#: block/editor.js:39
+msgid "Only show these species. Separate several with commas. Leave empty for all."
+msgstr ""
+
+#: block/editor.js:46
+msgid "Order"
+msgstr ""
+
+#: block/editor.js:59
+msgid "Most animals to show (0 for all)"
+msgstr ""
+
+#: block/editor.js:70
+msgid "Columns (0 for automatic)"
+msgstr ""
+
+#: block/editor.js:84
+msgid "Follow the plugin setting"
+msgstr ""
+
+#: block/editor.js:85
+msgid "Show"
+msgstr ""
+
+#: block/editor.js:86
+msgid "Hide"
+msgstr ""
+
+#: block/block.json
+msgctxt "block title"
+msgid "Adoptable animals"
+msgstr ""
+
+#: block/block.json
+msgctxt "block description"
+msgid "Shows the adoptable animals from your Animal Shelter Manager account."
+msgstr ""
+
+#: block/block.json
+msgctxt "block keyword"
+msgid "adopt"
+msgstr ""
+
+#: block/block.json
+msgctxt "block keyword"
+msgid "shelter"
+msgstr ""
+
+#: block/block.json
+msgctxt "block keyword"
+msgid "rescue"
+msgstr ""
+
+#: block/block.json
+msgctxt "block keyword"
+msgid "pets"
+msgstr ""
+
+#: block/block.json
+msgctxt "block keyword"
+msgid "ASM"
+msgstr ""

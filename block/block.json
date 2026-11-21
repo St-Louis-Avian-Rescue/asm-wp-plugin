@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "asm-wp-plugin/adoptable",
+	"title": "Adoptable animals",
+	"category": "widgets",
+	"icon": "pets",
+	"description": "Shows the adoptable animals from your Animal Shelter Manager account.",
+	"keywords": [ "adopt", "shelter", "rescue", "pets", "ASM" ],
+	"textdomain": "asm-wp-plugin",
+	"attributes": {
+		"species": { "type": "string", "default": "" },
+		"sort": { "type": "string", "default": "name" },
+		"limit": { "type": "integer", "default": 0 },
+		"columns": { "type": "integer", "default": 0 },
+		"filters": { "type": "string", "default": "" }
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ]
+	},
+	"editorScript": "asm-wp-plugin-block-editor",
+	"style": "asm-wp-plugin"
+}

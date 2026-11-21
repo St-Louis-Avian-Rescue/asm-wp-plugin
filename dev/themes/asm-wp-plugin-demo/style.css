@@ -1,0 +1,64 @@
+/*
+Theme Name: ASM WP Plugin Demo
+Description: Development only. A dark child theme that shows the three ways to restyle the ASM WP Plugin listing: theme colours it picks up by itself, custom properties, and a template override.
+Template: twentytwentyfive
+Version: 1.0
+Text Domain: asm-wp-plugin-demo
+*/
+
+/* 1. Nothing here for fonts and text colour: the listing inherits them from the theme (see theme.json). */
+
+/* 2. Custom properties change the rest. */
+.asm-wp-plugin {
+	--asm-wp-plugin-accent: #f2b33d;
+	--asm-wp-plugin-accent-text: #1b1a17;
+	--asm-wp-plugin-radius: 1rem;
+	--asm-wp-plugin-card-min: 13rem;
+	--asm-wp-plugin-image-ratio: 1 / 1;
+	--asm-wp-plugin-hover-scale: 1.03;
+	--asm-wp-plugin-modal-border: #f2b33d;
+	--asm-wp-plugin-share-bg: #3a3833;
+}
+
+/* 3. Styles for the markup added by asm-wp-plugin/card.php in this theme. */
+.asm-wp-plugin .asm-wp-plugin-card {
+	padding: 0;
+	overflow: hidden;
+	background: #2a2925;
+}
+
+.asm-wp-plugin .asm-wp-plugin-card__image {
+	border-radius: 0;
+}
+
+.asm-wp-plugin .asm-wp-plugin-card__name {
+	padding: 0.75rem 0.75rem 0;
+	font-size: 1.15rem;
+	text-align: left;
+}
+
+.asm-wp-plugin .asm-wp-plugin-card__details {
+	padding: 0 0.75rem;
+	text-align: left;
+}
+
+.asm-wp-plugin-demo-tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.35rem;
+	padding: 0.6rem 0.75rem 0.85rem;
+}
+
+.asm-wp-plugin-demo-tag {
+	padding: 0.1rem 0.55rem;
+	border-radius: 999px;
+	background: #f2b33d;
+	color: #1b1a17;
+	font-size: 0.75rem;
+	font-weight: 600;
+}
+
+.asm-wp-plugin-demo-tag--special {
+	background: #e2574c;
+	color: #fff;
+}
